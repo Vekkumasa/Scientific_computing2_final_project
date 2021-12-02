@@ -61,6 +61,12 @@ module walkers
       moveRight%health_status = w%health_status
     end function moveRight
 
+    type (walker) function heal(w, probability)
+      implicit none
+      type (walker), intent(in) :: w
+      real, intent(in) :: probability
+      
+    end function heal
 
 
 end module walkers
