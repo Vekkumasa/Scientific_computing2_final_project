@@ -2,11 +2,31 @@ module walkers
   implicit none
 
   type :: walker
-    integer :: x,y
+    integer :: x, y, id
     integer :: health_status ! 1 = Healthy, 2 = Sick, 3 = Immune
   end type walker
   
   contains
+    type (walker) function handleMove(w, arraySize)
+      implicit none
+      type (walker), intent(in) :: w
+      real :: probability
+      integer, intent(in) :: arraySize
+      call random_number(probability)
+    !  print '(f16.4)', probability
+
+      if (probability <= 0.25) then
+        handleMove = moveDown(w, arraySize)
+      else if (probability > 0.25 .and. probability <= 0.5) then
+        handleMove = moveUp(w, arraySize)
+      else if (probability > 0.5 .and. probability <= 0.75) then
+        handleMove = moveLeft(w, arraySize)
+      else
+        handleMove = moveRight(w, arraySize)
+      end if
+    end function handleMove
+
+
     type (walker) function moveDown(w, n)
       implicit none
       type (walker), intent(in) :: w
@@ -20,6 +40,7 @@ module walkers
 
       moveDown%x = w%x
       moveDown%health_status = w%health_status
+      moveDown%id = w%id
     end function moveDown
 
     type (walker) function moveUp(w, n)
@@ -33,6 +54,7 @@ module walkers
       end if
       moveUp%x = w%x
       moveUp%health_status = w%health_status
+      moveUp%id = w%id
     end function moveUp
 
     type (walker) function moveLeft(w, n)
@@ -46,6 +68,7 @@ module walkers
       end if
       moveLeft%y = w%y
       moveLeft%health_status = w%health_status
+      moveLeft%id = w%id
     end function moveLeft
 
     type (walker) function moveRight(w, n)
@@ -59,14 +82,36 @@ module walkers
       end if
       moveRight%y = w%y
       moveRight%health_status = w%health_status
+      moveRight%id = w%id
     end function moveRight
 
     type (walker) function heal(w, probability)
+    ! 1 = Healthy, 2 = Sick, 3 = Immune
       implicit none
       type (walker), intent(in) :: w
       real, intent(in) :: probability
-      
+      real :: randomNumber
+      call random_number(randomNumber)
+    !  print '(f16.4)', randomNumber * 100
+      if (randomNumber * 100 < probability) then
+        heal%health_status = 3
+      else
+        heal%health_status = w%health_status
+      end if
+      heal%x = w%x
+      heal%y = w%y
+      heal%id = w%id
     end function heal
+
+    function setArray(n) result (return_value)
+      implicit none
+      integer, intent(in) :: n
+      type (walker), dimension(n,n) :: return_value
+      type (walker) :: w
+      w = walker(-1,-1,-1, -1)
+      return_value = w
+
+    end function setArray
 
 
 end module walkers
