@@ -2,11 +2,49 @@ module walkers
   implicit none
 
   type :: walker
-    integer :: x, y, id
-    integer :: health_status ! 1 = Healthy, 2 = Sick, 3 = Immune
+    integer :: id, x, y, health_status ! 1 = Healthy, 2 = Sick, 3 = Immune
   end type walker
   
   contains
+    type (walker) function createWalker(n, id, infected, vaccinated)
+      implicit none
+      integer, intent(in) :: n, id
+      integer :: x,y,health_status
+      logical, intent(in) :: infected, vaccinated
+      real :: random
+      call random_number(random)
+      x = floor(n * random)
+      call random_number(random)
+      y = floor(n * random)
+
+      if (infected) then
+        health_status = 2
+      else if (vaccinated) then
+        health_status = 3
+      else
+        health_status = 1
+      end if
+
+      createWalker = walker(id, x, y, health_status)
+    end function createWalker
+
+    type (walker) function handleInfection(w, probability)
+      implicit none
+      real, intent(in) :: probability
+      real :: randomNumber
+      type (walker), intent(in) :: w
+      handleInfection%id = w%id
+      handleInfection%x = w%x
+      handleInfection%y = w%y
+      call random_number(randomNumber)
+      if (randomNumber < probability .or. w%health_status == 2) then
+        handleInfection%health_status = 2
+      else
+        handleInfection%health_status = 1
+      end if
+
+    end function handleInfection
+
     type (walker) function handleMove(w, arraySize)
       implicit none
       type (walker), intent(in) :: w
@@ -93,7 +131,7 @@ module walkers
       real :: randomNumber
       call random_number(randomNumber)
     !  print '(f16.4)', randomNumber * 100
-      if (randomNumber * 100 < probability) then
+      if (randomNumber < probability) then
         heal%health_status = 3
       else
         heal%health_status = w%health_status
@@ -106,7 +144,7 @@ module walkers
     function setArray(n) result (return_value)
       implicit none
       integer, intent(in) :: n
-      type (walker), dimension(n,n) :: return_value
+      type (walker), dimension(n) :: return_value
       type (walker) :: w
       w = walker(-1,-1,-1, -1)
       return_value = w

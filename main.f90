@@ -1,31 +1,62 @@
 program main
   use walkers
   use arrayHandler
+  use walkerSimulation
   implicit none
-  type (walker) :: testi
-  type (walker), allocatable :: walkerArray(:,:)
-  integer :: argsCount, arraySize, ios, timeSteps, id = 0
-  character(len=20) :: argu
+  type (walker) :: w
+  type (walker), allocatable :: walkerArray(:)
+  integer :: argsCount, arraySize, timeSteps, walkerCount, infected, vaccinated, vaccinatedWalkerCount = 0, id = 1
+  integer :: i
   argsCount = command_argument_count()
 
-  if (argsCount == 1) then
-    call get_command_argument(1, argu)
-    read(argu, *, iostat=ios) arraySize
-      if (ios == 0) then
-        read(argu, *) arraySize
-      else
-        arraySize = 5
-      end if
-  else
-    arraySize = 5
+  if (argsCount /= 5) then
+      write(0,'(a,a,a)') &
+      'Please enter 5 integers: arraySize, timeSteps, walkerCount, Infected, Vaccinated'
+      stop
   end if
-  if (arraySize < 0) arraySize = 5
 
-  walkerArray = setArray(arraySize)
+  arraySize = readLine(1)
+  timeSteps = readLine(2)
+  walkerCount = readLine(3)
+  infected = readLine(4)
+  vaccinated = readLine(5)
 
-  testi = walker(1,2, 1, id)
-  testi = heal(testi, 20.0)
-  walkerArray(1,1) = testi
-  testi = handleMove(testi, arraySize)
-  call printArray(walkerArray, arraySize)
+  walkerArray = setArray(walkerCount)
+  do i = 0, walkerCount
+    if (i < infected) then
+      w = createWalker(arraySize, id, .true., .false.)
+    else if (vaccinatedWalkerCount < vaccinated) then
+      w = createWalker(arraySize, id, .false., .true.)
+      vaccinatedWalkerCount = vaccinatedWalkerCount + 1
+    else
+      w = createWalker(arraySize, id, .false., .false.)
+    end if  
+    walkerArray(id) = w
+    id = id +1
+  end do
+
+  call simulate(timeSteps, walkerCount, walkerarray, arraySize)
+
+  contains
+    integer function readLine(n)
+      implicit none
+      integer :: ios
+      integer, intent(in) :: n
+      character(len=20) :: argu
+
+      call get_command_argument(n, argu)
+      read(argu, *, iostat=ios) readLine
+      if (ios == 0) then
+        read(argu, *) readLine
+        if (readLine < 0) then
+          write(0,'(a,a,a)') &
+            'Only positive integers'
+          stop
+        end if
+      else
+        write(0,'(a,a,a)') &
+          'Please enter 5 integers: arraySize, timeSteps, walkerCount, Infected, Vaccinated'
+        stop
+      end if
+    end function readLine
 end program main
