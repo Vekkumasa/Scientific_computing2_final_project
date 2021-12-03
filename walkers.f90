@@ -130,7 +130,6 @@ module walkers
       real, intent(in) :: probability
       real :: randomNumber
       call random_number(randomNumber)
-    !  print '(f16.4)', randomNumber * 100
       if (randomNumber < probability) then
         heal%health_status = 3
       else

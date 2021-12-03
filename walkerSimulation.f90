@@ -13,8 +13,7 @@ module walkerSimulation
 
       do i = 1, timeSteps
         j = 1
-        k = 1
-        print *, "Timestep:", i
+        k = 1     
         do j = 1, walkerCount
           w1 = walkerArray(j)
           w1 = handleMove(w1, arraySize)
@@ -34,7 +33,12 @@ module walkerSimulation
             end if
           end do
         end do
-        call printWalkerArray(walkerArray, arraySize)
+
+        print *, ''
+        print '(i2)', walkerCount
+        print '(a10, i3)', "#Timestep:", i
+        call printWalkerArray(walkerArray, walkerCount)
+        call printStatistics(walkerArray, walkerCount)
       end do
 
     end subroutine simulate

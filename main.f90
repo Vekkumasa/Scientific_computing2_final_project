@@ -22,6 +22,7 @@ program main
   vaccinated = readLine(5)
 
   walkerArray = setArray(walkerCount)
+
   do i = 0, walkerCount
     if (i < infected) then
       w = createWalker(arraySize, id, .true., .false.)
@@ -35,6 +36,9 @@ program main
     id = id +1
   end do
 
+  do i = 1, size(walkerArray)
+    print *, walkerarray(i)
+  end do
   call simulate(timeSteps, walkerCount, walkerarray, arraySize)
 
   contains
