@@ -25,7 +25,7 @@ program main
   
   print *, arraySize, timeSteps, walkerCount, infected, vaccinated
   do i = 1, walkerCount
-    if (i < infected) then
+    if (i <= infected) then
       w = createWalker(arraySize, id, .true., .false.)
     else if (vaccinatedWalkerCount < vaccinated) then
       w = createWalker(arraySize, id, .false., .true.)
@@ -37,8 +37,6 @@ program main
     id = id +1
   end do
 
-
-  print *, 'simulate:', i
   call simulate(timeSteps, walkerCount, walkerarray, arraySize)
 
   contains

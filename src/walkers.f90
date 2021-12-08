@@ -51,7 +51,6 @@ module walkers
       real :: probability
       integer, intent(in) :: arraySize
       call random_number(probability)
-    !  print '(f16.4)', probability
 
       if (probability <= 0.25) then
         handleMove = moveDown(w, arraySize)

@@ -9,6 +9,7 @@ module walkerSimulation
       type (walker) :: w1, w2
       integer :: i,j,k
       integer(kind=4), intent(in) :: timeSteps, walkerCount, arraySize
+      real :: healProbability = 0.05, infectProbability = 0.5
       type (walker) :: walkerArray(walkerCount)
 
       do i = 1, timeSteps
@@ -18,7 +19,7 @@ module walkerSimulation
           w1 = walkerArray(j)
           w1 = handleMove(w1, arraySize)
           if (w1%health_status == 2) then
-            w1 = heal(w1, 0.05)
+            w1 = heal(w1, healProbability)
           end if
           walkerArray(j) = w1
           do k = 1, walkerCount
@@ -26,7 +27,7 @@ module walkerSimulation
             if (w1%id /= w2%id) then
               if (w1%x == w2%x .and. w1%y == w2%y) then
                 if (w1%health_status == 1 .and. w2%health_status == 2) then
-                  w1 = handleInfection(w1, 0.5)
+                  w1 = handleInfection(w1, infectProbability)
                   walkerArray(j) = w1
                 end if
               end if
