@@ -1,12 +1,12 @@
 program main
   use walkers
-  use arrayHandler
-  use walkerSimulation
+  use arrayhandler
+  use walkersimulation
   implicit none
   type (walker) :: w
   type (walker), allocatable :: walkerArray(:)
-  integer :: argsCount, arraySize, timeSteps, walkerCount, infected, vaccinated, vaccinatedWalkerCount = 0, id = 1
-  integer :: i
+  integer(kind=4) :: argsCount, arraySize, timeSteps, walkerCount, infected, vaccinated, vaccinatedWalkerCount = 0, id = 1
+  integer(kind=4) :: i = 0
   argsCount = command_argument_count()
 
   if (argsCount /= 5) then
@@ -22,8 +22,9 @@ program main
   vaccinated = readLine(5)
 
   walkerArray = setArray(walkerCount)
-
-  do i = 0, walkerCount
+  
+  print *, arraySize, timeSteps, walkerCount, infected, vaccinated
+  do i = 1, walkerCount
     if (i < infected) then
       w = createWalker(arraySize, id, .true., .false.)
     else if (vaccinatedWalkerCount < vaccinated) then
@@ -36,6 +37,8 @@ program main
     id = id +1
   end do
 
+
+  print *, 'simulate:', i
   call simulate(timeSteps, walkerCount, walkerarray, arraySize)
 
   contains

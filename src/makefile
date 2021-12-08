@@ -1,5 +1,5 @@
-prog: main.o walkers.o walkerSimulation.o arrayHandler.o
-	gfortran -o prog main.o walkers.o walkerSimulation.o arrayHandler.o
+prog: walkers.o arrayHandler.o walkerSimulation.o main.o
+	gfortran -o prog walkers.o arrayHandler.o walkerSimulation.o main.o
 
 main.o: main.f90
 	gfortran -c main.f90
@@ -14,4 +14,4 @@ arrayHandler.o: arrayHandler.f90
 	gfortran -c arrayHandler.f90
 
 clean:
-	rm -rf *.o prog
+	rm -rf *.o *.mod prog

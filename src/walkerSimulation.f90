@@ -8,7 +8,7 @@ module walkerSimulation
       implicit none
       type (walker) :: w1, w2
       integer :: i,j,k
-      integer, intent(in) :: timeSteps, walkerCount, arraySize
+      integer(kind=4), intent(in) :: timeSteps, walkerCount, arraySize
       type (walker) :: walkerArray(walkerCount)
 
       do i = 1, timeSteps
@@ -35,7 +35,7 @@ module walkerSimulation
         end do
 
         print *, ''
-        print '(i2)', walkerCount
+        print '(i4)', walkerCount
         print '(a10, i3)', "#Timestep:", i
         call printWalkerArray(walkerArray, walkerCount)
         call printStatistics(walkerArray, walkerCount)
